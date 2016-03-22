@@ -6,6 +6,14 @@ This will be cleaned up in the future, but I'd rather get it out into the world 
 
 It comes with no guarantees. It could be wrong, it might not work, it might burn down your computer. Feel free to submit PRs with failing tests that demonstrate issues, or with fixes.
 
+## Requirements
+
+AssociationReporter requires the `colorize` gem.
+
+```
+gem install colorize
+```
+
 ## Usage
 
 Require association-reporter and extend your ActiveRecord model with AssociationReporting.

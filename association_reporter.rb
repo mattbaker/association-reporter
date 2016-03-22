@@ -1,3 +1,5 @@
+require 'colorize'
+
 module AssociationReporting
 
   def describe(association)
