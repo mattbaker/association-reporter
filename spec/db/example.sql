@@ -9,7 +9,6 @@ CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name VARCHAR
   password VARCHAR
-  profile_id INTEGER
 );
 
 CREATE TABLE profiles (
