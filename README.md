@@ -8,14 +8,14 @@ It comes with no guarantees. It could be wrong, it might not work, it might burn
 
 ## Usage
 
-Require association-reporter and extend your ActiveRecord model with AssociationReporting.
+Require association-reporter and extend your ActiveRecord model with AssociationReporter.
 
 ```ruby
 
 require_relative 'association_reporter' #or wherever you put it
 
 class Article < ActiveRecord::Base
-  extend AssociationReporting
+  extend AssociationReporter
 
   has_many :comments
 end

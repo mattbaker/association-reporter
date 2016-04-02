@@ -1,0 +1,20 @@
+Describing the association <%= model_class_name %>#<%= reflection.name %>:
+
+This '<%= association_name(reflection) %>' association is looking for another association called <%= model_class_name %>#<%= through_assoc.label %> to jump through.
+
+<% if through_assoc.valid? -%>
+It will go through the association <%= model_class_name %>#<%= through_assoc.label %> to the model <%= through_class.label %>.
+<%   if through_class.valid? -%>
+
+When it gets to <%= through_class.label %> it <%#
+%><%   if source_assoc.valid? -%>
+will jump through a source association called <%= through_class.label %>#<%= source_assoc.label %>.
+
+<%= through_class.label%>#<%= source_assoc.label %> is an association that returns <%= source_class.label %> objects from the <%= source_table.label %> table.
+<%     else -%>
+will try to jump through an association called <%= through_class.label%>#<%= source_assoc.label %>.
+<%     end -%>
+<%   end -%>
+<% end -%>
+
+This association is feeling <%= valid_association ? '😃' : '😢' %>

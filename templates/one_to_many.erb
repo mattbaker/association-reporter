@@ -1,0 +1,6 @@
+Describing the association <%= model_class_name %>#<%= reflection.name %>:
+
+  This '<%= association_name(reflection) %>' association is looking for a column called '<%= fkey_column.label %>' on the table '<%= fkey_table.label %>'.
+  It's expecting to return <%= reflection.collection? ? "a collection of" : "a"%> <%= assoc_class.label %> object<%= reflection.collection? ? "s" : "" %> from the <%= assoc_table.label %> table.
+
+  This association is feeling <%= valid_association ? '😃' : '😢' %>

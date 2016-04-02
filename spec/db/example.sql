@@ -1,0 +1,37 @@
+CREATE TABLE articles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title VARCHAR,
+  body VARCHAR,
+  author_id INTEGER
+);
+
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR
+  password VARCHAR
+  profile_id INTEGER
+);
+
+CREATE TABLE profiles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  location VARCHAR
+  user_id INTEGER
+);
+
+CREATE TABLE comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  article_id INTEGER
+  body VARCHAR
+  user_id INTEGER
+);
+
+CREATE TABLE articles_tags (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  article_id INTEGER,
+  tag_id INTEGER
+);
+
+CREATE TABLE tags (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR
+);
