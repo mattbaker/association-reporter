@@ -1,6 +1,6 @@
-Describing the association <%= model_class_name %>#<%= reflection.name %>:
+Describing the association <%= reflection.active_record %>#<%= reflection.name %>:
 
-  This '<%= association_name(reflection) %>' association is looking for a column called '<%= fkey_column.label %>' on the table '<%= fkey_table.label %>'.
-  It's expecting to return <%= reflection.collection? ? "a collection of" : "a"%> <%= assoc_class.label %> object<%= reflection.collection? ? "s" : "" %> from the <%= assoc_table.label %> table.
+  This '<%= reflection.macro %>' association is looking for a column called '<%= assumption.fkey_column_label %>' on the table '<%= assumption.fkey_table_label %>'.
+  It's expecting to return <%= reflection.collection? ? "a collection of" : "a"%> <%= assumption.assoc_klass_label %> object<%= reflection.collection? ? "s" : "" %> from the <%= assumption.assoc_table_label %> table.
 
-  This association is feeling <%= valid_association ? '😃' : '😢' %>
+  This association is feeling <%= assumption.valid? ? '😃' : '😢' %>

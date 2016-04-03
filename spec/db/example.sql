@@ -7,24 +7,24 @@ CREATE TABLE articles (
 
 CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name VARCHAR
+  name VARCHAR,
   password VARCHAR
 );
 
 CREATE TABLE profiles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  location VARCHAR
+  location VARCHAR,
   user_id INTEGER
 );
 
 CREATE TABLE comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  article_id INTEGER
-  body VARCHAR
+  article_id INTEGER,
+  body VARCHAR,
   user_id INTEGER
 );
 
-CREATE TABLE articles_tags (
+CREATE TABLE taggings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   article_id INTEGER,
   tag_id INTEGER

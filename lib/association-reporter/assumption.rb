@@ -3,69 +3,130 @@ require 'singleton'
 
 module AssociationReporter
   class Assumption
-    attr_reader :guess
+    def initialize(reflection)
+      @reflection = reflection
+    end
 
-    def label
-      guess && guess.to_s.colorize(valid? ? :green : :red)
+    private
+    attr_reader :reflection
+
+    def labelize(str, cond)
+      str && str.to_s.colorize(cond ? :green : :red)
     end
   end
 
-  class ColumnAssumption < Assumption
-    def initialize(table_name, column)
-      @table_name = table_name
-      @column = column
-      @guess = column
+
+  class HasManyThroughAssociationAssumption < Assumption
+    def through_name
+      reflection.options[:through]
+    end
+
+    def through_name_label
+      valid = reflection.active_record.method_defined?(through_name)
+      labelize(reflection.options[:through], valid)
+    end
+
+    def through_assumption
+      reflection.through_reflection &&
+      AssociationAssumption.new(reflection.through_reflection)
+    end
+
+    def source_name
+      reflection.source_reflection_names.first.to_s
+    end
+
+    def source_label
+      labelize(source_name, reflection.source_reflection)
+    end
+
+    def source_assumption
+      reflection.source_reflection &&
+      AssociationAssumption.new(reflection.source_reflection)
     end
 
     def valid?
-      ActiveRecord::Base.connection.table_exists?(@table_name) &&
-      ActiveRecord::Base.connection.column_exists?(@table_name, @column)
+      through_assumption.try(:valid?) && source_assumption.try(:valid?)
     end
   end
 
   class AssociationAssumption < Assumption
-    def initialize(klass, association_name)
-      @klass = klass
-      @association_name = association_name
-      @guess = association_name
+    def assoc_klass_name
+      reflection.class_name
+    end
+
+    def assoc_klass
+      begin
+        return reflection.klass
+      rescue NameError => e
+        raise e if assoc_klass_name && !e.name.include?(assoc_klass_name)
+      end
+      nil
+    end
+
+    def assoc_klass_label
+      labelize(assoc_klass_name, assoc_klass)
+    end
+
+    def assoc_table
+      assoc_klass.try(:table_name) || assoc_klass_name.underscore.downcase.pluralize
+    end
+
+    def assoc_table_label
+      labelize(assoc_table, valid_table?)
+    end
+
+    def valid_table?
+      ActiveRecord::Base.connection.table_exists?(assoc_table)
     end
 
     def valid?
-      @klass.method_defined?(@association_name)
+      valid_table? && assoc_klass
     end
+
+    private
+    attr_reader :reflection
   end
 
-  class ModelTableAssumption < Assumption
-    def initialize(klass)
-      @table = klass && klass.to_s.underscore.pluralize
-      @guess = @table
+  class OneToManyAssociationAssumption < AssociationAssumption
+    def fkey_table
+      if reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)
+        table_name = reflection.active_record.table_name
+      else
+        table_name = assoc_table
+      end
+    end
+
+    def fkey_table_label
+      labelize(fkey_table, valid_fkey_table?)
+    end
+
+    def fkey_column
+      reflection.foreign_key
+    end
+
+    def fkey_column_label
+      labelize(fkey_column, valid_fkey_table? && valid_fkey_column?)
+    end
+
+    def valid_fkey_table?
+      ActiveRecord::Base.connection.table_exists?(fkey_table)
+    end
+
+    def valid_fkey_column?
+      ActiveRecord::Base.connection.column_exists?(fkey_table, fkey_column)
     end
 
     def valid?
-      @table && ActiveRecord::Base.connection.table_exists?(@table)
+      super && valid_fkey_table? && valid_fkey_column?
+    end
+
+    private
+    def one_to_many_fkey_model(reflection)
+      if reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)
+        reflection.active_record
+      else
+        assoc_klass
+      end
     end
   end
-
-  class ModelClassAssumption < Assumption
-    attr_reader :klass_guess
-
-    def initialize(klass_name)
-      @klass_name = klass_name
-      @klass_guess = valid? ? Object.const_get(klass_name) : nil
-      @guess = klass_name
-    end
-
-    def valid?
-      @klass_name.present? && Object.const_defined?(@klass_name)
-    end
-  end
-
-  class InvalidAssumption < Assumption
-    include Singleton
-
-    def valid?
-      false
-    end
-  end
-
 end

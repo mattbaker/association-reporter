@@ -1,20 +1,19 @@
-Describing the association <%= model_class_name %>#<%= reflection.name %>:
+Describing the association <%= reflection.active_record %>#<%= reflection.name %>:
 
-This '<%= association_name(reflection) %>' association is looking for another association called <%= model_class_name %>#<%= through_assoc.label %> to jump through.
+This '<%= reflection.macro %>' association is looking for another association called <%= reflection.active_record %>#<%= assumption.through_name_label %> to jump through.
 
-<% if through_assoc.valid? -%>
-It will go through the association <%= model_class_name %>#<%= through_assoc.label %> to the model <%= through_class.label %>.
-<%   if through_class.valid? -%>
+<% if assumption.through_assumption -%>
+It will go through the association <%= reflection.active_record %>#<%= assumption.through_name_label %> to the model <%= assumption.through_assumption.assoc_klass_label %>.
+<%   if assumption.through_assumption.assoc_klass -%>
+When it gets to <%= assumption.through_assumption.assoc_klass_label %> it <%#
+%><%  if assumption.source_assumption -%>
+will jump through a source association called <%= assumption.through_assumption.assoc_klass_label %>#<%= assumption.source_label %>.
 
-When it gets to <%= through_class.label %> it <%#
-%><%   if source_assoc.valid? -%>
-will jump through a source association called <%= through_class.label %>#<%= source_assoc.label %>.
-
-<%= through_class.label%>#<%= source_assoc.label %> is an association that returns <%= source_class.label %> objects from the <%= source_table.label %> table.
-<%     else -%>
-will try to jump through an association called <%= through_class.label%>#<%= source_assoc.label %>.
-<%     end -%>
-<%   end -%>
+<%= assumption.through_assumption.assoc_klass_label %>#<%= assumption.source_label %> is an association that returns <%= assumption.source_assumption.assoc_klass_label %> objects from the <%= assumption.source_assumption.assoc_table_label %> table.
+<% else -%>
+will try to jump through an association called <%= assumption.through_assumption.assoc_klass_label%>#<%= assumption.source_label %>.
+<% end -%>
+<% end -%>
 <% end -%>
 
-This association is feeling <%= valid_association ? '😃' : '😢' %>
+This association is feeling <%= assumption.valid? ? '😃' : '😢' %>

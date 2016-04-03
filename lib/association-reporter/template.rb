@@ -12,20 +12,5 @@ module AssociationReporter
     def self.render(template, locals)
       Template.new(locals).render(template)
     end
-
-    def association_name(reflection)
-      case reflection
-      when ActiveRecord::Reflection::HasManyReflection
-        "has_many"
-      when ActiveRecord::Reflection::BelongsToReflection
-        "belongs_to"
-      when ActiveRecord::Reflection::HasOneReflection
-        "has_one"
-      when ActiveRecord::Reflection::ThroughReflection
-        "has_many :through"
-      else
-        ""
-      end
-    end
   end
 end
