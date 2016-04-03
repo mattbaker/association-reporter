@@ -7,9 +7,8 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Matt Baker"]
   spec.email       = 'mbaker.pdx@gmail.com'
   spec.files       = ["lib/association-reporter.rb"]
-  spec.homepage    =
-    'https://github.com/mattbaker/association-reporter'
-  spec.license       = 'MIT'
+  spec.homepage    = 'https://github.com/mattbaker/association-reporter'
+  spec.license     = 'MIT'
 
   spec.add_development_dependency 'bundler', '~> 1.9'
   spec.add_development_dependency 'rake', '~>10.5'
