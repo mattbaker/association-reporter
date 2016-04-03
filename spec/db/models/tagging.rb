@@ -1,5 +1,5 @@
 class Tagging < ActiveRecord::Base
   extend AssociationReporter::Reporter
   belongs_to :article
-  belongs_to :toog, class_name: "Tag"
+  belongs_to :tag
 end

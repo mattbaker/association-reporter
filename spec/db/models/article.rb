@@ -4,5 +4,5 @@ class Article < ActiveRecord::Base
   has_one :author_profile, through: :author, source: :profile
   has_many :comments
   has_many :taggings
-  has_many :toogs, through: :taggings, source: :toog
+  has_many :tags, through: :taggings
 end
