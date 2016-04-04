@@ -119,14 +119,5 @@ module AssociationReporter
     def valid?
       super && valid_fkey_table? && valid_fkey_column?
     end
-
-    private
-    def one_to_many_fkey_model(reflection)
-      if reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)
-        reflection.active_record
-      else
-        assoc_klass
-      end
-    end
   end
 end
