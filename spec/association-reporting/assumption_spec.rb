@@ -16,40 +16,88 @@ describe AssociationReporter::Assumption do
   end
 
   describe AssociationReporter::HasManyThroughAssociationAssumption do
+
     it "provides the through name" do
+      ModelFactories.define_Article_with_valid_through_and_source
+      assumption = described_class.new(Article.reflect_on_association(:hashtags))
+      expect(assumption.through_name).to eq("taggings")
+    end
+
+    it "provides a source name" do
+      ModelFactories.define_Article_with_valid_through_and_source
+      assumption = described_class.new(Article.reflect_on_association(:hashtags))
+      expect(assumption.source_name).to eq("tag")
+    end
+
+    context "with a valid through method" do
+      before(:each) { ModelFactories.define_Article_with_valid_through_and_source }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
+      it "#valid_through_method? is true" do
+        expect(assumption.valid_through_method?).to be(true)
+      end
+    end
+
+    context "with an invalid through method" do
+      before(:each) { ModelFactories.define_Article_with_invalid_through }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
+      it "#valid_through_method? is false" do
+        expect(assumption.valid_through_method?).to be(false)
+      end
     end
 
     context "with a valid through reflection" do
+      before(:each) { ModelFactories.define_Article_with_valid_through_and_source }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
       it "provides a through assumption" do
+        expect(assumption.through_assumption).to be_a(AssociationReporter::AssociationAssumption)
       end
     end
 
     context "with an invalid through reflection" do
+      before(:each) { ModelFactories.define_Article_with_invalid_through }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
       it "provides a nil through assumption" do
+        expect(assumption.through_assumption).to be(nil)
       end
 
       it "is invalid" do
+        expect(assumption).to_not be_valid
       end
     end
 
-    it "provides a source name" do
-    end
 
     context "with a valid source reflection" do
+      before(:each) { ModelFactories.define_Article_with_valid_through_and_source }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
       it "provides a source assumption" do
+        expect(assumption.source_assumption).to be_a(AssociationReporter::AssociationAssumption)
       end
     end
 
     context "with an invalid source reflection" do
+      before(:each) { ModelFactories.define_Article_with_invalid_source }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
       it "provides a nil source assumption" do
+        expect(assumption.source_assumption).to be(nil)
       end
 
       it "is invalid" do
+        expect(assumption).to_not be_valid
       end
     end
 
     context "with a valid through and source reflection" do
+      before(:each) { ModelFactories.define_Article_with_valid_through_and_source }
+      let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
+
       it "is valid" do
+        expect(assumption).to be_valid
       end
     end
   end
@@ -76,6 +124,12 @@ describe AssociationReporter::Assumption do
       it "is valid" do
         expect(assumption).to be_valid
       end
+
+      describe "#valid_table?" do
+        it "is false" do
+          expect(assumption.valid_table?).to be(true)
+        end
+      end
     end
 
     context "with an invalid associated class" do
@@ -97,32 +151,108 @@ describe AssociationReporter::Assumption do
       it "is invalid" do
         expect(assumption).to_not be_valid
       end
+
+      describe "#valid_table?" do
+        it "is false" do
+          expect(assumption.valid_table?).to be(false)
+        end
+      end
     end
   end
 
   describe AssociationReporter::OneToManyAssociationAssumption do
     it "picks the current table for the fkey in a belongs to" do
+      ModelFactories.define_Article_with_valid_belongs_to
+      assumption = AssociationReporter::OneToManyAssociationAssumption
+        .new(Article.reflect_on_association(:writer))
+
+      expect(assumption.fkey_table).to eq("articles")
     end
 
     it "picks the other table for the fkey in a non-belongs-to" do
+      ModelFactories.define_Article_with_has_many
+      assumption = AssociationReporter::OneToManyAssociationAssumption
+        .new(Article.reflect_on_association(:comments))
+
+      expect(assumption.fkey_table).to eq("comments")
     end
 
     it "provides the foreign key column" do
+      ModelFactories.define_Article_with_valid_belongs_to
+      assumption = AssociationReporter::OneToManyAssociationAssumption
+        .new(Article.reflect_on_association(:writer))
+
+      expect(assumption.fkey_column).to eq(:author_id)
     end
 
-    it "validates if the fkey table exists" do
+    context "with a valid fkey table" do
+      describe "#valid_fkey_table?" do
+        it 'is true' do
+          ModelFactories.define_Article_with_bad_fkey_good_model
+          assumption = AssociationReporter::OneToManyAssociationAssumption
+            .new(Article.reflect_on_association(:writer))
+
+          expect(assumption.valid_fkey_table?).to be(true)
+        end
+      end
     end
 
-    it "validates if the fkey column exists" do
+    context "with an invalid fkey table" do
+      before(:each) { ModelFactories.define_Article_with_bad_has_many_model }
+      let(:assumption) do
+        AssociationReporter::OneToManyAssociationAssumption
+          .new(Article.reflect_on_association(:things_people_said))
+      end
+
+      describe "#valid_fkey_table?" do
+        it 'is false' do
+          expect(assumption.valid_fkey_table?).to be(false)
+        end
+      end
+
+      it 'is invalid' do
+        expect(assumption).to_not be_valid
+      end
     end
 
-    it "is valid if the fkey table and column are present" do
+    context "with a valid fkey column" do
+      describe "#valid_fkey_column?" do
+        it "is true" do
+          ModelFactories.define_Article_with_good_fkey_bad_model
+          assumption = AssociationReporter::OneToManyAssociationAssumption
+            .new(Article.reflect_on_association(:writer))
+
+          expect(assumption.valid_fkey_column?).to be(true)
+        end
+      end
     end
 
-    it "is invalid if the fkey table is not present" do
+    context "with an invalid fkey column" do
+      before(:each) { ModelFactories.define_Article_with_bad_fkey_good_model }
+      let(:assumption) do
+        AssociationReporter::OneToManyAssociationAssumption
+            .new(Article.reflect_on_association(:writer))
+      end
+
+      describe "#valid_fkey_column?" do
+        it "is false" do
+          expect(assumption.valid_fkey_column?).to be(false)
+        end
+      end
+
+      it 'is invalid' do
+        expect(assumption).to_not be_valid
+      end
     end
 
-    it "is invalid if the fkey column is not present" do
+    context "with a valid association" do
+      it "is valid" do
+        ModelFactories.define_Article_with_valid_belongs_to
+        assumption = AssociationReporter::OneToManyAssociationAssumption
+          .new(Article.reflect_on_association(:writer))
+
+        expect(assumption).to be_valid
+      end
     end
   end
 end

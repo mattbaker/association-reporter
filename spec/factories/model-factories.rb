@@ -49,11 +49,11 @@ module ModelFactories
     end
   end
 
-  def define_Article_with_bad_fkey_bad_model
+  def define_Article_with_bad_fkey_good_model
     clear_and_define(:Article) do
       Class.new(ActiveRecord::Base) do
         extend AssociationReporter::Reporter
-        belongs_to :writer
+        belongs_to :writer, class_name: "User"
       end
     end
   end
@@ -63,6 +63,15 @@ module ModelFactories
       Class.new(ActiveRecord::Base) do
         extend AssociationReporter::Reporter
         belongs_to :writer, foreign_key: :author_id
+      end
+    end
+  end
+
+  def define_Article_with_bad_has_many_model
+    clear_and_define(:Article) do
+      Class.new(ActiveRecord::Base) do
+        extend AssociationReporter::Reporter
+        has_many :things_people_said
       end
     end
   end

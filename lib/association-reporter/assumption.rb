@@ -18,12 +18,15 @@ module AssociationReporter
 
   class HasManyThroughAssociationAssumption < Assumption
     def through_name
-      reflection.options[:through]
+      reflection.options[:through].to_s
+    end
+
+    def valid_through_method?
+      reflection.active_record.method_defined?(through_name)
     end
 
     def through_name_label
-      valid = reflection.active_record.method_defined?(through_name)
-      labelize(reflection.options[:through], valid)
+      labelize(reflection.options[:through], valid_through_method?)
     end
 
     def through_assumption
