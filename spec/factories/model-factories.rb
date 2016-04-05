@@ -7,7 +7,6 @@ module ModelFactories
     def self.up
       create_table :articles do |t|
         t.integer :author_id
-        t.integer :user_id
       end
 
       create_table :users
@@ -45,6 +44,18 @@ module ModelFactories
     clear_and_define(:User) do
       Class.new(ActiveRecord::Base) do
         extend AssociationReporter::Reporter
+      end
+    end
+  end
+
+  def defined_Article_model
+    clear_and_define(:Article) do
+      Class.new(ActiveRecord::Base) do
+        extend AssociationReporter::Reporter
+        has_many :taggings
+        has_many :tags, through: :taggings
+        has_many :comments
+        belongs_to :author, class_name: "User"
       end
     end
   end
