@@ -48,6 +48,8 @@ The `rake play` task will boot a REPL with a few models loaded from `spec/factor
 
 Templates for the output are in `templates`, they're just ERB files.
 
+The `watch` command in the demo supports both color and emoji. You'll find the port by @whit537 [here](https://github.com/whit537/watch).
+
 ## Caveats
 
 This is brand new and probably full of bugs, inaccuracies, and scary things that go bump in the night. PRs are warmly welcomed!
