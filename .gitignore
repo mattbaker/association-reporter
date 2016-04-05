@@ -2,3 +2,4 @@
 .irb-history
 repl.db
 test.db
+Gemfile.lock
