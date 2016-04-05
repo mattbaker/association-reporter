@@ -40,22 +40,60 @@ module ModelFactories
     Object.const_set(const, klass)
   end
 
-  def define_User_model
-    clear_and_define(:User) do
-      Class.new(ActiveRecord::Base) do
-        extend AssociationReporter::Reporter
-      end
-    end
+  def define_all_models
+    define_Article_model
+    define_Comment_model
+    define_Tagging_model
+    define_Tag_model
   end
 
-  def defined_Article_model
+  def define_Article_model
     clear_and_define(:Article) do
       Class.new(ActiveRecord::Base) do
         extend AssociationReporter::Reporter
         has_many :taggings
-        has_many :tags, through: :taggings
+        has_many :hashtags, through: :taggings
         has_many :comments
         belongs_to :author, class_name: "User"
+      end
+    end
+  end
+
+  def define_User_model
+    clear_and_define(:User) do
+      Class.new(ActiveRecord::Base) do
+        extend AssociationReporter::Reporter
+        has_many :comments
+      end
+    end
+  end
+
+  def define_Comment_model
+    clear_and_define(:Comment) do
+      Class.new(ActiveRecord::Base) do
+        extend AssociationReporter::Reporter
+        belongs_to :article
+        belongs_to :user
+      end
+    end
+  end
+
+  def define_Tagging_model
+    clear_and_define(:Tagging) do
+      Class.new(ActiveRecord::Base) do
+        extend AssociationReporter::Reporter
+        belongs_to :article
+        belongs_to :tag
+      end
+    end
+  end
+
+  def define_Tag_model
+    clear_and_define(:Tag) do
+      Class.new(ActiveRecord::Base) do
+        extend AssociationReporter::Reporter
+        has_many :taggings
+        has_many :tagged_articles, through: :taggings, source: :article
       end
     end
   end

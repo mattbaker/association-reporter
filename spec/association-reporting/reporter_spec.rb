@@ -9,8 +9,7 @@ describe AssociationReporter::Reporter do
     )
     ActiveRecord::Migration.verbose = false
     ModelFactories::CreateTestTables.migrate(:up)
-
-    ModelFactories.defined_Article_model
+    ModelFactories.define_all_models
   end
 
   after(:all) do
@@ -26,7 +25,7 @@ describe AssociationReporter::Reporter do
   end
 
   describe '::many_to_many_assumptions' do
-    let(:reflection) { Article.reflect_on_association(:tags) }
+    let(:reflection) { Article.reflect_on_association(:hashtags) }
 
     it "renders a report" do
       expect(Article.many_to_many_description(reflection)).to be_a(String)

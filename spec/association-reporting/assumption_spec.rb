@@ -71,7 +71,9 @@ describe AssociationReporter::Assumption do
 
 
     context "with a valid source reflection" do
+      before(:each) { ModelFactories.define_Tagging_model }
       before(:each) { ModelFactories.define_Article_with_valid_through_and_source }
+
       let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
 
       it "provides a source assumption" do
@@ -93,7 +95,10 @@ describe AssociationReporter::Assumption do
     end
 
     context "with a valid through and source reflection" do
+      before(:each) { ModelFactories.define_Tag_model }
+      before(:each) { ModelFactories.define_Tagging_model }
       before(:each) { ModelFactories.define_Article_with_valid_through_and_source }
+
       let(:assumption) { described_class.new(Article.reflect_on_association(:hashtags)) }
 
       it "is valid" do
