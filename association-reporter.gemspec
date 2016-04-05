@@ -6,7 +6,9 @@ Gem::Specification.new do |spec|
   spec.description = "Detailed reports for Active Record Associations"
   spec.authors     = ["Matt Baker"]
   spec.email       = 'mbaker.pdx@gmail.com'
-  spec.files       = ["lib/association-reporter.rb"]
+  spec.files       = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^spec|repl})
+  end
   spec.homepage    = 'https://github.com/mattbaker/association-reporter'
   spec.license     = 'MIT'
 
