@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.authors     = ["Matt Baker"]
   spec.email       = 'mbaker.pdx@gmail.com'
   spec.files       = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^spec|repl})
+    f.match(%r{^spec|repl|assets})
   end
   spec.homepage    = 'https://github.com/mattbaker/association-reporter'
   spec.license     = 'MIT'
