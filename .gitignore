@@ -3,3 +3,4 @@
 repl.db
 test.db
 Gemfile.lock
+*.gem
