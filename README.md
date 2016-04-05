@@ -38,6 +38,10 @@ Colorized output will tell you which guesses succeeded and which guesses failed:
 
 In the example above, it appears our `has_many :through` needs us to specify a source, because it couldn't guess the source name on the `Tagging` model.
 
+## Demo
+
+![_Demo of a Dev Bootcamp AR challenge_](assets/demo.gif)
+
 ## Additional Information
 
 The `rake play` task will boot a REPL with a few models loaded from `spec/factories` so you can try this out.
