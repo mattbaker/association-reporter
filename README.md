@@ -15,6 +15,8 @@ gem install association-reporter
 To use AssociationReporter, extend your model with `AssociationReporter::Reporter`.
 
 ```ruby
+require "association-reporter/reporter"
+
 class Article
   extend AssociationReporter::Reporter
   has_many :taggings
